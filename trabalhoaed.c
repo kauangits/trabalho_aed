@@ -3,12 +3,6 @@
 #include <time.h>
 
 
-   typedef struct lava_rapido{
-   int n;
-   int *binario;
-
-   }lava;
-
 
   typedef struct no{
     int k,valor;
@@ -21,20 +15,6 @@
    no *fim;
 
   }fila;
-
-  lava criar_binario(){
-   lava l;
-   l.n = 17;
-   l.binario = (int *)malloc(l.n * sizeof(int));
-   int valores[] = {0,0,1,0,1,1,1,0,0,1,1,1,0,0,0,1,1,1};
-   for (int i = 0; i < l.n; i++) {
-        l.binario[i] = valores[i];
-    }
-
-
-   return l;
-
-  }
 
    fila* criar_fila(){
    fila *f;
@@ -91,20 +71,7 @@
    }
   }
 
-  /* int consultar_fila(fila *f){
-       no *novo;
-       novo = f->inicio;
-       int tam=0;
-      while(novo != NULL){
-        printf("valores na fila: %d \n",novo->valor);
-        novo = novo->prox;
-         tam++;
-       }
-       return tam;
 
-
-
-   } */
 
  int consultar_fila(fila *f){
        no *novo;
@@ -112,7 +79,6 @@
        int tam=0;
       while(novo != NULL){
         if(novo->ativo!=0){
-        printf("valores na fila: %d \n",novo->valor);
          tam++;
         }
         novo = novo->prox;
@@ -125,53 +91,53 @@
    }
 
 
-  int main(){
-  int k=5,a=0;
+   int lava_jato(int *binario,int n){
+    int k=0;
+    printf("informe o tamanho da sua fila");
+    scanf("%d", &k);
   fila *fi;
   fi = criar_fila();
-  lava l = criar_binario();
-  for (int i = 0; i < l.n; i++) {
-        printf("%d ", l.binario[i]);
-    }
-    printf("\n");
-  int t=0,lavados=0,tamanho=0;
+
+  int t=0,lavados=0;
 
 
-  a = consultar_fila(fi);
 
-     for(int i=0;i<l.n;i++){
 
-        if(l.binario[i]==0){
+     for(int i=0;i<n;i++){
 
-            if(fi->inicio!=0){
+        if(binario[i]==0){
+
+            if(fi->inicio!=NULL){
                 if(t==3){
                     remocao_na_fila(fi);
-                    tamanho--;
+
                     t=0;
                     lavados = lavados+1;
-
+                       t++;
                 }else{
 
                   t++;
-                }
+            }
             }
         }else{
 
             if(t==3){
                 remocao_na_fila(fi);
-                tamanho--;
                 lavados++;
                 t=0;
-               if(l.binario[i]==1){
 
-                inserir_na_fila(fi,1);
-                tamanho++;
-               }
-            }else if(tamanho!=k){
+
+                    inserir_na_fila(fi,1);
+                    t++;
+
+
+            }else if(consultar_fila(fi)!=k){
 
              inserir_na_fila(fi,1);
 
 
+             t++;
+            }else{
              t++;
             }
 
@@ -180,17 +146,47 @@
 
 
      }
-     a = consultar_fila(fi);
-     printf("\n");
-     printf("%d\n", t);
-   printf("lavados: %d", lavados);
-  printf("\na %d",a);
-
-    free(fi);
-    free(l.binario);
 
 
 
+     free(fi);
+  return lavados;
+
+
+
+
+   }
+
+  int main(){
+      int n;
+
+
+    printf("Digite o tamanho do vetor binario: ");
+    scanf("%d", &n);
+
+
+    int* vetorBinario = (int*)malloc(n * sizeof(int));
+
+    if (vetorBinario == NULL) {
+        printf("Erro: Não foi possível alocar memória.\n");
+        return 0;
+    }
+
+    srand(time(NULL));
+    printf("Vetor binário gerado:\n");
+
+     for (int i = 0; i < n; i++) {
+        vetorBinario[i] = rand() % 2;
+        printf("%d ", vetorBinario[i]);
+         }
+
+       vetorBinario[n - 1] = 1;
+       printf("1\n");
+
+
+
+    int lavados = lava_jato(vetorBinario, n);
+    free(vetorBinario);
+    printf("lavados: %d", lavados);
 
  return 0;}
-
